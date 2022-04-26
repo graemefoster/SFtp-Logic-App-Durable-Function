@@ -24,4 +24,4 @@ jobs:
       - uses: azure/webapps-deploy@v2
         with:
           app-name: "${{ secrets.LOGIC_APP_NAME }}"
-          package: "./"
+          package: "./logic-app/"
