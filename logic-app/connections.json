@@ -1,0 +1,36 @@
+{
+    "serviceProviderConnections": {
+        "Sftp": {
+            "parameterValues": {
+                "sshHostAddress": "@appsetting('Sftp_sshHostAddress')",
+                "username": "@appsetting('Sftp_username')",
+                "password": "@appsetting('Sftp_password')",
+                "portNumber": "@appsetting('Sftp_portNumber')",
+                "rootDirectory": "@appsetting('Sftp_rootDirectory')",
+                "sshPrivateKey": "@appsetting('Sftp_sshPrivateKey')",
+                "sshPrivateKeyPassphrase": "@appsetting('Sftp_sshPrivateKeyPassphrase')",
+                "sshHostKeyFingerprint": "@appsetting('Sftp_sshHostKeyFingerprint')"
+            },
+            "serviceProvider": {
+                "id": "/serviceProviders/Sftp"
+            },
+            "displayName": "ftp"
+        },
+        "Sftp-2": {
+            "parameterValues": {
+                "sshHostAddress": "@appsetting('Sftp_12_sshHostAddress')",
+                "username": "@appsetting('Sftp_12_username')",
+                "password": "@appsetting('Sftp_12_password')",
+                "portNumber": "@appsetting('Sftp_12_portNumber')",
+                "rootDirectory": "@appsetting('Sftp_12_rootDirectory')",
+                "sshPrivateKey": "@appsetting('Sftp_12_sshPrivateKey')",
+                "sshPrivateKeyPassphrase": "@appsetting('Sftp_12_sshPrivateKeyPassphrase')",
+                "sshHostKeyFingerprint": "@appsetting('Sftp_12_sshHostKeyFingerprint')"
+            },
+            "serviceProvider": {
+                "id": "/serviceProviders/Sftp"
+            },
+            "displayName": "ftp2"
+        }
+    }
+}
