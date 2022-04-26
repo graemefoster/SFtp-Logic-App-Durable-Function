@@ -3,13 +3,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-    inputs:
-      RG_LA:
-        description: "Resource group name"
-        required: true
-      LA_NAME:
-        description: "Logic App name"
-        required: true
 
 jobs:
   Build:
