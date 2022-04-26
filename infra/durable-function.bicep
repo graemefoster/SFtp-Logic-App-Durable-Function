@@ -7,23 +7,15 @@ param location string = resourceGroup().location
 param lawid string
 
 resource logicPlan 'Microsoft.Web/serverfarms@2021-02-01' = {
-  name: '${uniqueName}-logicapp-plan'
+  name: '${uniqueName}-durable-function-plan'
   location: location
   sku: {
-    tier: 'WorkflowStandard'
-    name: 'WS1'
-  }
-  properties: {
-    targetWorkerCount: 1
-    maximumElasticWorkerCount: 3
-    elasticScaleEnabled: true
-    isSpot: false
-    zoneRedundant: true
+    name : 'S1'
   }
 }
 
 resource appi 'Microsoft.Insights/components@2020-02-02' = {
-  name: '${uniqueName}-appi'
+  name: '${uniqueName}-durable-appi'
   location: location
   kind: 'web'
   properties: {
@@ -37,11 +29,8 @@ resource appi 'Microsoft.Insights/components@2020-02-02' = {
   }
 }
 
-//Where to find the logic app definitions in storage:
-var websiteContentShare = 'app-${toLower(uniqueName)}-logicservice'
-
 resource storage 'Microsoft.Storage/storageAccounts@2021-08-01' = {
-  name: '${uniqueName}logicstg'
+  name: '${uniqueName}funcstg'
   location: location
   kind: 'StorageV2'
   sku: {
@@ -50,14 +39,6 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-08-01' = {
   properties: {
     supportsHttpsTrafficOnly: true
     minimumTlsVersion: 'TLS1_2'
-  }
-
-  resource files 'fileServices@2021-08-01' = {
-    name: 'default'
-
-    resource logicAppContent 'shares' = {
-      name: websiteContentShare
-    }
   }
 }
 
@@ -75,47 +56,15 @@ resource site 'Microsoft.Web/sites@2021-02-01' = {
       appSettings: [
         {
           name: 'FUNCTIONS_EXTENSION_VERSION'
-          value: '~3'
+          value: '~4'
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
-          value: 'node'
-        }
-        {
-          name: 'WEBSITE_NODE_DEFAULT_VERSION'
-          value: '~12'
+          value: 'dotnet'
         }
         {
           name: 'AzureWebJobsStorage'
           value: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${listKeys(storage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
-        }
-        {
-          name: 'WEBSITE_CONTENTAZUREFILECONNECTIONSTRING'
-          value: 'DefaultEndpointsProtocol=https;AccountName=${storage.name};AccountKey=${listKeys(storage.id, '2019-06-01').keys[0].value};EndpointSuffix=core.windows.net'
-        }
-        {
-          name: 'WEBSITE_CONTENTSHARE'
-          value: websiteContentShare
-        }
-        {
-          name: 'AzureFunctionsJobHost__extensionBundle__id'
-          value: 'Microsoft.Azure.Functions.ExtensionBundle.Workflows'
-        }
-        {
-          name: 'AzureFunctionsJobHost__extensionBundle__version'
-          value: '[1.*, 2.0.0)'
-        }
-        {
-          name: 'APP_KIND'
-          value: 'workflowApp'
-        }
-        {
-          name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: appi.properties.InstrumentationKey
-        }
-        {
-          name: 'ApplicationInsightsAgent_EXTENSION_VERSION'
-          value: '~2'
         }
         {
           name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
@@ -191,6 +140,7 @@ resource site 'Microsoft.Web/sites@2021-02-01' = {
     serverFarmId: logicPlan.id
     clientAffinityEnabled: false
   }
+
 }
 
 // Return the Logic App service name and farm name

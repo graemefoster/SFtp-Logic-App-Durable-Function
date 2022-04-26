@@ -98,8 +98,19 @@ module logicApp './logic-app.bicep' = {
   params: {
     lawid: logaw.id
     uniqueName: uniqueName
+    sftpName: sftp.name
     location: location
     sshUsername: fred.name
   }
 }
 
+module durableFunctionApp './durable-function.bicep' = {
+  name: 'durableFunction'
+  params: {
+    lawid: logaw.id
+    uniqueName: uniqueName
+    sftpName: sftp.name
+    location: location
+    sshUsername: fred.name
+  }
+}
